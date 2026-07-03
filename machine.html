@@ -27,11 +27,11 @@
 
         .back-btn {
             position: absolute;
-            top: 60px;
-            left: 60px;
-            padding: 10px 20px;
+            top: 30px;
+            left: 40px;
+            padding: 8px 16px;
             font-family: 'Poppins', sans-serif;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
             color: rgb(0, 0, 0);
             background: rgba(255, 64, 129, 0.1);
@@ -58,18 +58,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: -30px; 
+            margin-top: -20px; 
         }
 
+        /* Laptop friendly machine dimensions */
         .machine {
-            width: 700px;  
-            height: 180px; 
+            width: 580px;  
+            height: 140px; 
             background: linear-gradient(135deg, #ff4081, #d81b60);
-            border-radius: 30px 30px 10px 10px;
+            border-radius: 25px 25px 10px 10px;
             border: 4px solid #ff80ab;
             position: relative;
             z-index: 10;
-            box-shadow: 0 0 60px rgba(255, 64, 129, 0.7), inset 0 5px 20px rgba(255,255,255,0.4);
+            box-shadow: 0 0 50px rgba(255, 64, 129, 0.7), inset 0 5px 20px rgba(255,255,255,0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -78,16 +79,16 @@
 
         .machine-title {
             color: #fff;
-            font-size: 44px; 
+            font-size: 34px; 
             font-weight: 700;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 2px 3px 0px #880e4f;
-            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px #880e4f;
+            margin-bottom: 15px;
         }
 
-        .led-lights { display: flex; gap: 24px; }
-        .led { width: 16px; height: 16px; border-radius: 50%; background: #fff; opacity: 0.3; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        .led-lights { display: flex; gap: 20px; }
+        .led { width: 14px; height: 14px; border-radius: 50%; background: #fff; opacity: 0.3; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .led.active-1 { animation: blink 0.3s infinite alternate; background: #00e676; box-shadow: 0 0 15px #00e676; opacity: 1; }
         .led.active-2 { animation: blink 0.4s infinite alternate; background: #ffea00; box-shadow: 0 0 15px #ffea00; opacity: 1; }
         .led.active-3 { animation: blink 0.5s infinite alternate; background: #00b0ff; box-shadow: 0 0 15px #00b0ff; opacity: 1; }
@@ -95,23 +96,24 @@
         @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
 
         .slot {
-            width: 640px; 
-            height: 16px;
+            width: 520px; 
+            height: 12px;
             background: #0a0a0a;
             border-radius: 10px;
             position: absolute;
-            bottom: -8px;
+            bottom: -6px;
             z-index: 11;
             box-shadow: inset 0 4px 8px #000;
         }
 
+        /* Laptop friendly paper dimensions */
         .paper-mask {
-            width: 620px; 
-            height: 720px; 
+            width: 500px; 
+            height: 480px; 
             position: relative;
             z-index: 5;
             overflow: hidden;
-            margin-top: -8px;
+            margin-top: -6px;
         }
 
         .paper {
@@ -119,11 +121,11 @@
             height: 100%;
             background: #ffffff !important; 
             border-radius: 0 0 15px 15px;
-            padding: 50px 60px;
+            padding: 35px 45px;
             position: absolute;
             top: 0; left: 0;
             transform: translateY(-100%);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.6);
             border-left: 3px dashed #f48fb1;
             border-right: 3px dashed #f48fb1;
             border-bottom: 3px dashed #f48fb1;
@@ -136,9 +138,9 @@
             opacity: 0;
             font-family: 'Dancing Script', cursive;
             color: #0b145d; 
-            font-size: 22px; 
+            font-size: 17px; 
             font-weight: 700; 
-            line-height: 1.6;
+            line-height: 1.5;
             transition: opacity 1.5s ease-in;
         }
 
@@ -146,9 +148,9 @@
 
         .heart-stamp {
             position: absolute;
-            bottom: 1px;
-            right: 66px;
-            font-size: 108px;
+            bottom: -5px;
+            right: 40px;
+            font-size: 70px;
             color: #d32f2f;
             opacity: 0.8;
             transform: rotate(-15deg);
@@ -161,10 +163,10 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(4) rotate(-20deg);
             font-family: 'Poppins', sans-serif;
-            font-size: 120px;
+            font-size: 80px;
             font-weight: 900;
-            border-radius: 20px;
-            padding: 20px 40px;
+            border-radius: 15px;
+            padding: 15px 30px;
             opacity: 0;
             pointer-events: none;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
@@ -173,7 +175,7 @@
 
         .giant-stamp.yes {
             color: rgba(216, 27, 96, 0.4); 
-            border: 12px solid rgba(216, 27, 96, 0.4);
+            border: 8px solid rgba(216, 27, 96, 0.4);
         }
 
         .giant-stamp.stamped {
@@ -184,12 +186,12 @@
         /* --- QUESTION POPUP DESIGN --- */
         .stamp-prompt {
             position: absolute;
-            bottom: 40px;
+            bottom: 20px;
             background: #ffffff;
-            padding: 25px 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            border: 4px solid #ff4081;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 3px solid #ff4081;
             text-align: center;
             opacity: 0;
             pointer-events: none;
@@ -205,9 +207,9 @@
         .stamp-prompt p {
             color: #d81b60;
             font-family: 'Poppins', sans-serif;
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .prompt-btns {
@@ -215,12 +217,12 @@
         }
 
         .prompt-btns button {
-            padding: 12px 30px;
-            margin: 0 10px;
+            padding: 10px 25px;
+            margin: 0 8px;
             font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
             border: none;
             transition: 0.3s;
@@ -232,15 +234,15 @@
         #noStamp { 
             background: #e0e0e0; 
             color: #555; 
-            z-index: 1000; /* Taaki upar rahe jab bhage */
+            z-index: 1000; 
         }
 
         /* BUTTON */
         .btn {
-            margin-top: 150px; 
-            padding: 18px 50px;
+            margin-top: 30px; 
+            padding: 14px 40px;
             font-family: 'Poppins', sans-serif;
-            font-size: 22px; 
+            font-size: 18px; 
             font-weight: 700;
             color: white;
             background: transparent;
@@ -255,7 +257,7 @@
             z-index: 20;
         }
 
-        .btn:hover { background: #ff4081; box-shadow: 0 0 40px rgba(255, 64, 129, 0.8); transform: scale(1.05); }
+        .btn:hover { background: #ff4081; box-shadow: 0 0 30px rgba(255, 64, 129, 0.8); transform: scale(1.05); }
         .btn:disabled { opacity: 0; pointer-events: none; }
     </style>
 </head>
@@ -284,7 +286,7 @@
                     Maine maangi thi ek dua apni khushiyon ke liye, aur khuda ne mujhe tumhara sath de diya. Bin kahe mere dil ki har baat samajh lene ke liye shukriya.<br><br>
                     Sari umar aise hi mera haath thaame rehna, kyunki tumhare bina meri koi kahani nahi.<br><br>
                     Hamesha sirf tumhara,<br>
-                    <span style="font-size: 56px; font-weight: 700;">Harsh</span>
+                    <span style="font-size: 42px; font-weight: 700;">Harsh</span>
                     
                     <div class="heart-stamp">❤️</div>
                 </div>
@@ -317,14 +319,12 @@
         const led2 = document.getElementById('led2');
         const led3 = document.getElementById('led3');
 
-        // 1. PAGE LOAD HOTE HI CHECK KARNA KI KYA STAMP PEHLE SE LAGA HAI (PERMANENT FEATURE)
         document.addEventListener("DOMContentLoaded", () => {
             const isStamped = localStorage.getItem('loveLetterStamped');
             
             if (isStamped === 'yes') {
-                // Agar stamp lag chuka hai pehle, toh direct khula hua dikhega
                 printBtn.style.display = 'none';
-                paper.style.transition = 'none'; // Bina animation ke direct show
+                paper.style.transition = 'none'; 
                 paper.style.transform = 'translateY(0)';
                 letterText.style.transition = 'none';
                 letterText.style.opacity = '1';
@@ -336,7 +336,6 @@
             }
         });
 
-        // 2. GENERATE LOVE BUTTON CLICK ANIMATION
         printBtn.addEventListener('click', () => {
             printBtn.disabled = true; 
             
@@ -359,9 +358,7 @@
             }, 4000); 
         });
 
-        // 3. JAB 'YES' CLICK KARE
         yesStamp.addEventListener('click', () => {
-            // Local Storage me save kar lo taaki refresh hone par bhi rahe
             localStorage.setItem('loveLetterStamped', 'yes');
             
             stampPrompt.classList.remove('show'); 
@@ -372,10 +369,8 @@
             }, 300);
         });
 
-        // 4. JAB 'NO' PAR MOUSE LE JAYE (BHAGNE WALA BUTTON)
         const runAway = () => {
             noStamp.style.position = 'fixed';
-            // Random x aur y coordinates generate karenge screen ke size ke hisaab se
             const x = Math.random() * (window.innerWidth - noStamp.offsetWidth - 50);
             const y = Math.random() * (window.innerHeight - noStamp.offsetHeight - 50);
             
@@ -383,12 +378,10 @@
             noStamp.style.top = `${Math.max(20, y)}px`;
         };
 
-        // Computer mouse ke liye
         noStamp.addEventListener('mouseover', runAway);
         
-        // Mobile touch screen ke liye
         noStamp.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Button ko click hone se rokega
+            e.preventDefault(); 
             runAway();
         });
 
