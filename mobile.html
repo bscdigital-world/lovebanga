@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f0a0a;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Mobile mein scroll rokne ke liye */
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            /* Mobile ke liye padding aur border-radius kam kiya */
+            padding: 30px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.2);
+            color: white;
+            width: 85%; /* Mobile width */
+            max-width: 400px;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem; /* Font size mobile ke hisaab se chhota kiya */
+            color: #ff69b4;
+            text-shadow: 0 0 10px #ff69b4;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        .special-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: #ff9376;
+            text-shadow: 0 0 5px #ff9376;
+            font-weight: 600;
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid #ff69b4;
+            padding: 12px 30px; /* Button size mobile ke liye adjust kiya */
+            color: #ff69b4;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            text-shadow: 0 0 5px #ff69b4;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+            transition: 0.4s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #ff69b4;
+            color: white;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Hey Beautiful... ✨</h1>
+        <p class="special-text">I have something special to show you.</p>
+        <!-- Button mein 'id' add ki hai takki JS ise pehchan sake -->
+        <button id="startBtn">Start Journey 💖</button>
+    </div>
+
+    <script>
+        // Button par click karne ka event
+        document.getElementById('startBtn').addEventListener('click', function() {
+            // ⚠️ AJUST HERE: 'next_page.html' ki jagah apni dusri file ka sahi naam ya path likhein
+            window.location.href = 'mobile2.html'; 
+        });
+    </script>
+
+</body>
+</html>

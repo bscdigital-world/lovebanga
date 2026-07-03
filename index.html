@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        // Ekdum Bulletproof Mobile Detection Script
+        function detectDeviceAndRedirect() {
+            // 1. Screen ki choudai check karo
+            const isSmallScreen = window.innerWidth <= 768;
+
+            // 2. Mobile browser ka naam check karo
+            const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            // 3. Touch screen check karo (Mobile/Tablet me touch hota hai)
+            const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+            // Agar inme se KOI BHI ek cheez sahi nikal gayi, toh boss yeh MOBILE hi hai!
+            if (isMobileUA || isSmallScreen || (isTouchDevice && window.innerWidth <= 1024)) {
+                // Agar mobile hai to mobile.html par redirect karega
+                window.location.href = "mobile.html";
+            } else {
+                // Agar laptop/desktop hai to index.html par redirect karega
+                window.location.href = "laptop.html";
+            }
+        }
+
+        // ⚡ WARNING: window.onload ka wait nahi karenge! Turant chalaenge taaki fast redirect ho.
+        detectDeviceAndRedirect();
+    </script>
+</head>
+<body>
+    </body>
+</html>

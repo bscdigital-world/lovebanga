@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Made Just For You</title>
+    <link rel="stylesheet" href="style2s.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- MOBILE LAYOUT ADJUSTMENTS --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+
+        .screen-container {
+            width: 83%;
+            min-height: 42vh;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; 
+            z-index: 10;
+            position: relative;
+        }
+
+        .title {
+            font-size: 2.2rem; 
+            text-align: center;
+            margin-bottom: 19px;
+            width: 100%;
+        }
+
+        .subtitle {
+            font-size: 1.0rem; 
+            text-align: center;
+            margin-bottom: 26px;
+            width: 100%;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 17px;
+            width: 69%;
+            max-width: 360px; 
+        }
+
+        .card {
+            width: 90%;
+            height: 90%;
+            aspect-ratio: 1 / 1; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .card svg {
+            width: 45%;
+            height: 45%;
+        }
+
+        /* --- FLOATING 3D HEARTS ANIMATION --- */
+        .background-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .background-hearts span {
+            position: absolute;
+            bottom: -10vh;
+            font-size: 24px;
+            animation: floatUp linear infinite;
+            filter: drop-shadow(0px 4px 6px rgba(255, 105, 180, 0.5)); /* 3D effect ke liye shadow */
+            opacity: 0;
+        }
+
+        /* Alag-alag hearts ki speed, size aur position set ki hai */
+        .background-hearts span:nth-child(1) { left: 10%; animation-duration: 6s; animation-delay: 0s; font-size: 22px; }
+        .background-hearts span:nth-child(2) { left: 30%; animation-duration: 8s; animation-delay: 2s; font-size: 32px; }
+        .background-hearts span:nth-child(3) { left: 50%; animation-duration: 7s; animation-delay: 4s; font-size: 26px; }
+        .background-hearts span:nth-child(4) { left: 70%; animation-duration: 9s; animation-delay: 1s; font-size: 38px; }
+        .background-hearts span:nth-child(5) { left: 85%; animation-duration: 6.5s; animation-delay: 3s; font-size: 20px; }
+        .background-hearts span:nth-child(6) { left: 20%; animation-duration: 8.5s; animation-delay: 5s; font-size: 28px; }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) scale(1.2) rotate(20deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-hearts">
+        <span>💖</span><span>💖</span><span>💖</span><span>💖</span><span>💖</span><span>💖</span>
+    </div>
+
+    <div class="screen-container">
+        <h1 class="title">Made just for you</h1>
+        <p class="subtitle">Tap a card to open your surprise ✨</p>
+        
+        <div class="card-grid">
+            <div class="card" onclick="openSurprise(1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                    <path d="M12 11.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" fill="#f48fb1" stroke="none"></path>
+                </svg>
+            </div>
+
+            <div class="card" onclick="openSurprise(2)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                    <path d="M12 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="#f48fb1" stroke="none"></path>
+                </svg>
+            </div>
+
+            <div class="card" onclick="openSurprise(3)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                    <rect x="2" y="7" width="20" height="5"></rect>
+                    <line x1="12" y1="22" x2="12" y2="7"></line>
+                    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                </svg>
+            </div>
+
+            <div class="card" onclick="openSurprise(4)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22V12"></path>
+                    <path d="M12 12c-2-2-4-1-4 2s2 4 4 2"></path>
+                    <path d="M12 12c2-2 4-1 4 2s-2 4-4 2"></path>
+                    <path d="M12 12c0-3-2-5-4-3s-1 4 4 3"></path>
+                    <path d="M12 12c0-3 2-5 4-3s1 4-4 3"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script src="script2s.js"></script>
+</body>
+</html>

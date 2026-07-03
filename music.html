@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Lyrics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            /* Romantic Gradient Background */
+            background: radial-gradient(circle, #4a0518 0%, #000000 100%);
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Floating Hearts Animation */
+        .heart { position: absolute; font-size: 20px; opacity: 0.3; animation: floatUp 8s linear infinite; }
+        @keyframes floatUp { 0% { transform: translateY(100vh); } 100% { transform: translateY(-10vh); } }
+
+        #play-overlay {
+            position: absolute; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex;
+            justify-content: center; align-items: center; z-index: 100;
+        }
+
+        .play-btn {
+            padding: 20px 50px; font-size: 24px; border-radius: 50px;
+            background: #ff4081; color: white; border: none; cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.5);
+            transition: transform 0.2s;
+        }
+        
+        .play-btn:active { transform: scale(0.95); }
+
+        #lyrics-container { width: 90%; text-align: center; position: relative; height: 100px; }
+        
+        .lyric-line {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; opacity: 0; transition: opacity 0.6s ease-in-out;
+            font-size: 40px; font-weight: 600; color: #ffeb3b; text-shadow: 0 0 10px #ff4081;
+            pointer-events: none;
+        }
+        
+        .active { opacity: 1; }
+
+        /* ========================================================
+           GIF SETTINGS (Yahan se GIF ko chhota-bada / upar-niche karein)
+           ======================================================== */
+        #surprise-gif {
+            display: none; /* Shuru mein hidden rahega */
+            position: absolute;
+            
+            /* 1. POSITION: Upar niche karne ke liye percentage badlein (29% se zyada rakhein taaki button ke upar rahe) */
+            bottom: 34%; 
+            
+            /* Left/Right adjust karne ke liye (Abhi perfectly centered hai) */
+            left: 41%;
+            transform: translateX(-50%);
+            
+            /* 2. SIZE: GIF ko chhota ya bada karne ke liye width badlein (e.g., 100px, 150px, 200px) */
+            width: 355px; 
+            height: 355px; /* Isko auto hi rehne dein taaki photo khrb na ho */
+            
+            z-index: 49;
+            animation: fadeIn 1s forwards;
+        }
+
+        /* Next Surprise Button */
+        #next-surprise-btn {
+            display: none; /* Hidden by default */
+            position: absolute;
+            bottom: 29%;
+            padding: 15px 40px;
+            font-size: 23px;
+            border-radius: 50px;
+            background: #ffeb3b;
+            color: #4a0518;
+            border: none;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+            box-shadow: 0 0 20px #ff4081;
+            z-index: 50;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) { 
+            .lyric-line { font-size: 26px; } 
+            .play-btn { font-size: 20px; padding: 15px 35px; }
+            
+            /* Mobile ke liye agar alag se GIF size rakhna ho toh yahan change karein */
+            #surprise-gif {
+                width: 255px;
+                height: auto;
+                left: 110px;
+                bottom: 36%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-audio" src="song.mp4"></audio>
+
+    <div id="play-overlay"><button class="play-btn">Play Surprise For You ❤️</button></div>
+
+    <div id="hearts"></div>
+
+    <div id="lyrics-container"></div>
+
+    <img id="surprise-gif" src="bunny-balloon.gif" alt="Surprise Animation">
+
+    <button id="next-surprise-btn">Next Surprise 🎁</button>
+
+    <script>
+        // LYRICS AUR PERFECT TIMING
+        const lyricsData = [
+            { time: 0.5,  text: "Sunn le ye sada..." },
+            { time: 3.4,  text: "Kaisi dillagi hai" },
+            { time: 5.9,  text: "Tu..." },
+            { time: 9.12,  text: "Kaisi bebasi hai" },
+            { time: 11.3, text: "Tu..." },
+            { time: 14.7, text: "Meri zindagi hai" },
+            { time: 16.95, text: "Tu..." },
+            { time: 20.5, text: "Meri.." }
+        ];
+
+        // Background Hearts Generation
+        const heartsContainer = document.getElementById('hearts');
+        for(let i=0; i<20; i++) {
+            let h = document.createElement('div'); h.className = 'heart';
+            h.innerHTML = '❤️'; 
+            h.style.left = Math.random()*100 + 'vw';
+            h.style.animationDelay = Math.random()*8 + 's';
+            h.style.fontSize = (Math.random() * 17 + 15) + 'px'; 
+            heartsContainer.appendChild(h);
+        }
+
+        const audio = document.getElementById("bg-audio");
+        const playOverlay = document.getElementById("play-overlay");
+        const container = document.getElementById("lyrics-container");
+        const nextBtn = document.getElementById("next-surprise-btn");
+        const surpriseGif = document.getElementById("surprise-gif");
+
+        // Insert Lyrics into DOM
+        lyricsData.forEach((l, i) => {
+            const div = document.createElement("div");
+            div.className = "lyric-line"; 
+            div.id = `l-${i}`; 
+            div.innerHTML = l.text;
+            container.appendChild(div);
+        });
+
+        // Play Button Click
+        playOverlay.addEventListener("click", () => {
+            playOverlay.style.display = "none";
+            audio.play();
+        });
+
+        // Sync Lyrics smoothly
+        let activeIndex = -1;
+
+        audio.addEventListener("timeupdate", () => {
+            let newIndex = -1;
+            for (let i = 0; i < lyricsData.length; i++) {
+                let nextTime = lyricsData[i+1] ? lyricsData[i+1].time : audio.duration || 999;
+                if (audio.currentTime >= lyricsData[i].time && audio.currentTime < nextTime) {
+                    newIndex = i;
+                    break;
+                }
+            }
+
+            if (newIndex !== activeIndex) {
+                if (activeIndex !== -1) {
+                    document.getElementById(`l-${activeIndex}`).classList.remove("active");
+                }
+                if (newIndex !== -1) {
+                    document.getElementById(`l-${newIndex}`).classList.add("active");
+                }
+                activeIndex = newIndex;
+            }
+        });
+
+        // Show Next Surprise Button and GIF when song ends
+        audio.addEventListener("ended", () => {
+            if (activeIndex !== -1) {
+                document.getElementById(`l-${activeIndex}`).classList.remove("active");
+            }
+            // Button aur GIF dono ko ek saath show karega
+            nextBtn.style.display = "block";
+            surpriseGif.style.display = "block";
+        });
+
+        // ========================================================
+        // DEVICE BASE REDIRECTION LOGIC (Mobile vs Laptop)
+        // ========================================================
+        nextBtn.addEventListener("click", () => {
+            // Yeh code check karega ki user mobile par hai ya nahi
+            if (/Mobi|Android|iPhone|iPad|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
+                
+                /* [MOBILE CODE] : Agar user mobile par hai toh is file par jayega */
+                window.location.href = "mobile8.html"; 
+                
+            } else {
+                
+                /* [LAPTOP/DESKTOP CODE] : Agar user laptop par hai toh is file par jayega */
+                window.location.href = "laptop_surprise.html";
+                
+            }
+        });
+    </script>
+</body>
+</html>

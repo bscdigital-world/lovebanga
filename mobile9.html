@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Secret</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: none; /* Hidden until clicked */
+        }
+
+        /* The Bait Button */
+        #bait-btn {
+            position: relative;
+            z-index: 10;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            background: #ff003c;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff003c, inset 0 0 10px #000;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.1s ease;
+            max-width: 90%; /* Mobile ke liye safe width */
+            text-align: center;
+        }
+
+        #bait-btn:active {
+            transform: scale(0.9);
+            box-shadow: 0 0 50px #ff003c;
+        }
+
+        /* Naya Back Button CSS - Mobile friendly position */
+        #back-btn {
+            position: absolute;
+            top: 760px; /* Mobile par top corner me perfect dikhega */
+            left: 269px; /* Left se thoda gap */
+            z-index: 20;
+            padding: 6px 6px;
+            font-size: 14px; /* Mobile ke liye thoda chota kiya */
+            font-weight: bold;
+            color: #fff;
+            background: transparent;
+            border: 2px solid #00f3ff;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        #back-btn:hover {
+            background: #00f3ff;
+            color: #000;
+            box-shadow: 0 0 20px #00f3ff;
+        }
+
+        .glitch-effect {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back Button Add Kiya Hai -->
+    <button id="back-btn">Go Back</button>
+
+    <button id="bait-btn">TOUCH ME</button>
+    <canvas id="particle-canvas"></canvas>
+
+    <script>
+        // ==========================================
+        // YAHAN APNA MESSAGE LIKHO (CHOTA AUR BADA)
+        // ==========================================
+        const MAIN_MESSAGE = "YOU ARE";
+        const SUB_MESSAGE = "AMAZING!";
+        // ==========================================
+
+        const btn = document.getElementById('bait-btn');
+        const backBtn = document.getElementById('back-btn');
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        let particleArray = [];
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 80 // Mobile par ungli ke hisaab se thoda theek kiya
+        };
+
+        // Mobile touch & Mouse events
+        window.addEventListener('mousemove', function(event){
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+        // Phone par ungli rakhte hi effect aane ke liye touchstart add kiya
+        window.addEventListener('touchstart', function(event){
+            mouse.x = event.touches[0].clientX;
+            mouse.y = event.touches[0].clientY;
+        });
+        window.addEventListener('touchmove', function(event){
+            mouse.x = event.touches[0].clientX;
+            mouse.y = event.touches[0].clientY;
+        });
+        window.addEventListener('touchend', function(){
+            mouse.x = null;
+            mouse.y = null;
+        });
+        window.addEventListener('mouseout', function(){
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Back Button Click Logic (Index.html par jane ke liye)
+        backBtn.addEventListener('click', () => {
+            window.location.href = "mobile3.html"; // Ye seedha link par bhej dega
+        });
+
+
+        // Button Click Logic
+        btn.addEventListener('click', () => {
+            btn.classList.add('glitch-effect');
+            btn.innerText = "WEBSITE CRASHED";
+            
+            setTimeout(() => {
+                btn.style.display = 'none';
+                canvas.style.display = 'block';
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+                animateParticles();
+
+                // 3 Second baad Back Button Show Hoga
+                setTimeout(() => {
+                    backBtn.style.display = 'block';
+                }, 3000);
+
+            }, 1200); // 1200ms baad blast hoga
+        });
+
+        // Physics Particle Class
+        class Particle {
+            constructor(x, y) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.baseX = x;
+                this.baseY = y;
+                this.size = Math.random() * 2 + 1;
+                this.density = (Math.random() * 40) + 5;
+                const colors = ['#00f3ff', '#ff0080', '#ffffff'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 15;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 15;
+                    }
+                }
+            }
+        }
+
+        // Text ko canvas par likh kar uske pixels read karna
+        function initParticles() {
+            particleArray = [];
+            
+            ctx.fillStyle = 'white';
+            // Mobile ke hisaab se text size aur spacing dynamically adjust hogi
+            let fontSize = Math.min(canvas.width / 5.5, 100); 
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            
+            // Text draw karna (Center fix kiya for mobile)
+            ctx.fillText(MAIN_MESSAGE, canvas.width / 2, canvas.height / 2 - (fontSize * 0.4));
+            ctx.fillText(SUB_MESSAGE, canvas.width / 2, canvas.height / 2 + (fontSize * 0.8));
+
+            const textCoordinates = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
+            for (let y = 0, y2 = textCoordinates.height; y < y2; y += 4) {
+                for (let x = 0, x2 = textCoordinates.width; x < x2; x += 4) {
+                    if (textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128) {
+                        let positionX = x;
+                        let positionY = y;
+                        particleArray.push(new Particle(positionX, positionY));
+                    }
+                }
+            }
+        }
+
+        // Animation Loop
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particleArray.length; i++) {
+                particleArray[i].draw();
+                particleArray[i].update();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', function(){
+            if(canvas.style.display === 'block') {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            }
+        });
+    </script>
+</body>
+</html>

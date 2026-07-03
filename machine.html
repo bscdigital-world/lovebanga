@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Machine Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #cc1e1e 0%, #0eafc7 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            padding: 10px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: rgb(0, 0, 0);
+            background: rgba(255, 64, 129, 0.1);
+            border: 2px solid #ff4081;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.4);
+            transition: 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #ff4081;
+            box-shadow: 0 0 30px rgba(255, 64, 129, 0.8);
+            transform: scale(1.05);
+        }
+
+        .machine-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -30px; 
+        }
+
+        .machine {
+            width: 700px;  
+            height: 180px; 
+            background: linear-gradient(135deg, #ff4081, #d81b60);
+            border-radius: 30px 30px 10px 10px;
+            border: 4px solid #ff80ab;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 60px rgba(255, 64, 129, 0.7), inset 0 5px 20px rgba(255,255,255,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .machine-title {
+            color: #fff;
+            font-size: 44px; 
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 2px 3px 0px #880e4f;
+            margin-bottom: 20px;
+        }
+
+        .led-lights { display: flex; gap: 24px; }
+        .led { width: 16px; height: 16px; border-radius: 50%; background: #fff; opacity: 0.3; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        .led.active-1 { animation: blink 0.3s infinite alternate; background: #00e676; box-shadow: 0 0 15px #00e676; opacity: 1; }
+        .led.active-2 { animation: blink 0.4s infinite alternate; background: #ffea00; box-shadow: 0 0 15px #ffea00; opacity: 1; }
+        .led.active-3 { animation: blink 0.5s infinite alternate; background: #00b0ff; box-shadow: 0 0 15px #00b0ff; opacity: 1; }
+
+        @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
+
+        .slot {
+            width: 640px; 
+            height: 16px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            position: absolute;
+            bottom: -8px;
+            z-index: 11;
+            box-shadow: inset 0 4px 8px #000;
+        }
+
+        .paper-mask {
+            width: 620px; 
+            height: 720px; 
+            position: relative;
+            z-index: 5;
+            overflow: hidden;
+            margin-top: -8px;
+        }
+
+        .paper {
+            width: 100%;
+            height: 100%;
+            background: #ffffff !important; 
+            border-radius: 0 0 15px 15px;
+            padding: 50px 60px;
+            position: absolute;
+            top: 0; left: 0;
+            transform: translateY(-100%);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            border-left: 3px dashed #f48fb1;
+            border-right: 3px dashed #f48fb1;
+            border-bottom: 3px dashed #f48fb1;
+            transition: transform 4s linear; 
+        }
+
+        .paper.printing { transform: translateY(0); }
+
+        .letter-content {
+            opacity: 0;
+            font-family: 'Dancing Script', cursive;
+            color: #0b145d; 
+            font-size: 22px; 
+            font-weight: 700; 
+            line-height: 1.6;
+            transition: opacity 1.5s ease-in;
+        }
+
+        .letter-content.show-text { opacity: 1; }
+
+        .heart-stamp {
+            position: absolute;
+            bottom: 1px;
+            right: 66px;
+            font-size: 108px;
+            color: #d32f2f;
+            opacity: 0.8;
+            transform: rotate(-15deg);
+        }
+
+        /* --- STAMP DESIGN --- */
+        .giant-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(4) rotate(-20deg);
+            font-family: 'Poppins', sans-serif;
+            font-size: 120px;
+            font-weight: 900;
+            border-radius: 20px;
+            padding: 20px 40px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 50;
+        }
+
+        .giant-stamp.yes {
+            color: rgba(216, 27, 96, 0.4); 
+            border: 12px solid rgba(216, 27, 96, 0.4);
+        }
+
+        .giant-stamp.stamped {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1) rotate(-20deg);
+        }
+
+        /* --- QUESTION POPUP DESIGN --- */
+        .stamp-prompt {
+            position: absolute;
+            bottom: 40px;
+            background: #ffffff;
+            padding: 25px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border: 4px solid #ff4081;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            z-index: 100;
+        }
+
+        .stamp-prompt.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .stamp-prompt p {
+            color: #d81b60;
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .prompt-btns {
+            position: relative;
+        }
+
+        .prompt-btns button {
+            padding: 12px 30px;
+            margin: 0 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+
+        #yesStamp { background: #ff4081; color: white; box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4); }
+        #yesStamp:hover { transform: scale(1.1); background: #d81b60; }
+        
+        #noStamp { 
+            background: #e0e0e0; 
+            color: #555; 
+            z-index: 1000; /* Taaki upar rahe jab bhage */
+        }
+
+        /* BUTTON */
+        .btn {
+            margin-top: 150px; 
+            padding: 18px 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px; 
+            font-weight: 700;
+            color: white;
+            background: transparent;
+            border: 3px solid #ff4081;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 64, 129, 0.4);
+            transition: 0.3s;
+            position: relative;
+            z-index: 20;
+        }
+
+        .btn:hover { background: #ff4081; box-shadow: 0 0 40px rgba(255, 64, 129, 0.8); transform: scale(1.05); }
+        .btn:disabled { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <a href="surprise.html" class="back-btn">⬅ Back</a>
+
+    <div class="machine-container">
+        
+        <div class="machine">
+            <div class="machine-title">Love Generator</div>
+            <div class="led-lights">
+                <div class="led" id="led1"></div>
+                <div class="led" id="led2"></div>
+                <div class="led" id="led3"></div>
+            </div>
+            <div class="slot"></div>
+        </div>
+
+        <div class="paper-mask">
+            <div class="paper" id="paper">
+                <div class="letter-content" id="letterText">
+                    My Dearest Love,<br><br>
+                    Tumhari aahat se meri dhadkanein muskurati hain,<br>
+                    Tumhare hone se hi meri duniya jagmagati hai.<br><br>
+                    Maine maangi thi ek dua apni khushiyon ke liye, aur khuda ne mujhe tumhara sath de diya. Bin kahe mere dil ki har baat samajh lene ke liye shukriya.<br><br>
+                    Sari umar aise hi mera haath thaame rehna, kyunki tumhare bina meri koi kahani nahi.<br><br>
+                    Hamesha sirf tumhara,<br>
+                    <span style="font-size: 56px; font-weight: 700;">Harsh</span>
+                    
+                    <div class="heart-stamp">❤️</div>
+                </div>
+
+                <div class="giant-stamp" id="giantStamp"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" id="printBtn">Generate Love ✨</button>
+
+    <div class="stamp-prompt" id="stampPrompt">
+        <p>Kya tum is par apna stamp lagana chahti ho? 🥺</p>
+        <div class="prompt-btns">
+            <button id="yesStamp">Yes ❤️</button>
+            <button id="noStamp">No 💔</button>
+        </div>
+    </div>
+
+    <script>
+        const printBtn = document.getElementById('printBtn');
+        const paper = document.getElementById('paper');
+        const letterText = document.getElementById('letterText');
+        const stampPrompt = document.getElementById('stampPrompt');
+        const yesStamp = document.getElementById('yesStamp');
+        const noStamp = document.getElementById('noStamp');
+        const giantStamp = document.getElementById('giantStamp');
+        
+        const led1 = document.getElementById('led1');
+        const led2 = document.getElementById('led2');
+        const led3 = document.getElementById('led3');
+
+        // 1. PAGE LOAD HOTE HI CHECK KARNA KI KYA STAMP PEHLE SE LAGA HAI (PERMANENT FEATURE)
+        document.addEventListener("DOMContentLoaded", () => {
+            const isStamped = localStorage.getItem('loveLetterStamped');
+            
+            if (isStamped === 'yes') {
+                // Agar stamp lag chuka hai pehle, toh direct khula hua dikhega
+                printBtn.style.display = 'none';
+                paper.style.transition = 'none'; // Bina animation ke direct show
+                paper.style.transform = 'translateY(0)';
+                letterText.style.transition = 'none';
+                letterText.style.opacity = '1';
+                
+                giantStamp.style.transition = 'none';
+                giantStamp.innerText = "LOVE";
+                giantStamp.classList.add('yes');
+                giantStamp.classList.add('stamped');
+            }
+        });
+
+        // 2. GENERATE LOVE BUTTON CLICK ANIMATION
+        printBtn.addEventListener('click', () => {
+            printBtn.disabled = true; 
+            
+            led1.classList.add('active-1');
+            led2.classList.add('active-2');
+            led3.classList.add('active-3');
+
+            paper.classList.add('printing');
+
+            setTimeout(() => {
+                letterText.classList.add('show-text');
+                
+                led1.classList.remove('active-1');
+                led2.classList.remove('active-2');
+                led3.classList.remove('active-3');
+                
+                setTimeout(() => {
+                    stampPrompt.classList.add('show');
+                }, 1000);
+            }, 4000); 
+        });
+
+        // 3. JAB 'YES' CLICK KARE
+        yesStamp.addEventListener('click', () => {
+            // Local Storage me save kar lo taaki refresh hone par bhi rahe
+            localStorage.setItem('loveLetterStamped', 'yes');
+            
+            stampPrompt.classList.remove('show'); 
+            setTimeout(() => {
+                giantStamp.innerText = "LOVE";          
+                giantStamp.classList.add('yes');        
+                giantStamp.classList.add('stamped');    
+            }, 300);
+        });
+
+        // 4. JAB 'NO' PAR MOUSE LE JAYE (BHAGNE WALA BUTTON)
+        const runAway = () => {
+            noStamp.style.position = 'fixed';
+            // Random x aur y coordinates generate karenge screen ke size ke hisaab se
+            const x = Math.random() * (window.innerWidth - noStamp.offsetWidth - 50);
+            const y = Math.random() * (window.innerHeight - noStamp.offsetHeight - 50);
+            
+            noStamp.style.left = `${Math.max(20, x)}px`;
+            noStamp.style.top = `${Math.max(20, y)}px`;
+        };
+
+        // Computer mouse ke liye
+        noStamp.addEventListener('mouseover', runAway);
+        
+        // Mobile touch screen ke liye
+        noStamp.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Button ko click hone se rokega
+            runAway();
+        });
+
+    </script>
+
+</body>
+</html>

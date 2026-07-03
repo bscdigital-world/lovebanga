@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile screen scale aur zoom fix karne ke liye -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Surprise For You ❤️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Basic Reset & Background */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            background: linear-gradient(104deg, #e2151c 0%, #0fced3 99%, #5b0606 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Scroll tab tak hide rahega jab tak gallery na aaye */
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* Bouncing Tap Instruction */
+        #instruction {
+            font-size: 22px; /* Mobile size */
+            font-weight: bold;
+            color: #d63031;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            position: absolute;
+            top: 15%;
+            z-index: 10;
+            display: none;
+            animation: bounce 0.8s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-12px); }
+        }
+
+        /* Balloon Container */
+        #balloon-container {
+            cursor: pointer;
+            position: absolute;
+            bottom: -250px; 
+            z-index: 5;
+        }
+        
+        .float-up {
+            animation: floatUpAnim 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, gentleFloat 3s ease-in-out infinite 0.6s;
+        }
+
+        @keyframes floatUpAnim {
+            0% { bottom: -250px; transform: scale(0.5); opacity: 0; }
+            100% { bottom: 35%; transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* High Quality Realistic CSS Balloon */
+        .css-balloon {
+            width: 120px;
+            height: 150px;
+            background: #ff4757;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset -15px -15px 25px rgba(0,0,0,0.3), 0 15px 25px rgba(0,0,0,0.2);
+            position: relative;
+            transition: transform 0.1s;
+        }
+        
+        .css-balloon:active {
+            transform: scale(0.9);
+        }
+
+        .css-balloon::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 18px;
+            width: 25px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: rotate(25deg);
+            filter: blur(2px);
+        }
+
+        .balloon-knot {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 16px solid #ff4757;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+            z-index: 2;
+        }
+
+        .balloon-string {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        /* Pop Animation */
+        .pop-animation {
+            animation: pop 0.15s forwards !important;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* Single Photo Frame - Mobile adjusted */
+        #frame-container {
+            display: none;
+            background: #ffffff;
+            padding: 12px 12px 25px 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            width: 85%; /* Mobile ke liye width % me */
+            max-width: 340px;
+            transform: scale(0);
+            border: 1px solid #eaeaea;
+            position: relative;
+            z-index: 20;
+        }
+
+        .frame-show {
+            display: block !important;
+            animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes zoomIn {
+            to { transform: scale(1); }
+        }
+
+        .frame-hide {
+            animation: zoomOut 0.3s forwards;
+        }
+
+        @keyframes zoomOut {
+            to { transform: scale(0); opacity: 0; }
+        }
+
+        .photo {
+            width: 100%;
+            height: 45vh; /* Mobile height */
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            background: #f8f8f8;
+        }
+
+        .caption {
+            margin-top: 15px;
+            font-size: 16px; /* Mobile font */
+            color: #2d3436;
+            font-weight: 600;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        /* -------------------------------------------
+           FINAL GALLERY SECTION STYLES
+        --------------------------------------------- */
+        #final-gallery-section {
+            display: none; 
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            z-index: 50;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            padding: 80px 15px 20px 15px; /* Upar back button ki jagah chhodi hai */
+            text-align: center;
+        }
+
+        #final-message {
+            font-size: 24px; /* Mobile font */
+            color: #d63031;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+            animation: zoomIn 0.8s forwards;
+            padding: 10px;
+            margin-bottom: -21px;
+        }
+
+    
+                /* Mobile Grid Layout */
+        #gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Box per line */
+            gap: 15px 15px; /* Upar-neeche 40px gap, Left-Right sirf 15px gap */
+            width: 95%; /* Screen ka 95% hissa lega */
+            max-width: 500px; /* Max width thodi badha di */
+            margin: 0 auto;
+            padding-bottom: 20px; 
+        }
+
+
+                .gallery-frame {
+            background: #ffffff;
+            padding: 10px 10px 20px 10px; /* Padding thodi badhai taaki frame bada lage */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            width: 100%; 
+            border: 1px solid #eaeaea;
+            opacity: 0; 
+            animation: galleryPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+
+        @keyframes galleryPopIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .gallery-frame img {
+            width: 101%;
+            height: 191px; /* Mobile height */
+            object-fit: cover;
+            border-radius: -9px;
+            border: 1px solid #ddd;
+        }
+
+        .gallery-frame .gallery-caption {
+            margin-top: 3px;
+            font-size: 12px; /* Mobile font */
+            color: #2d3436;
+            font-weight: 600;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        /* -------------------------------------------
+           NEW SHAYARI SECTION STYLES
+        --------------------------------------------- */
+        #shayari-container {
+            margin-top: -3px;
+            margin-bottom: 2px; 
+            padding: 20px 15px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px dashed #ff4757;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            width: 95%; /* Mobile width */
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0; 
+            animation: fadeInShayari 1.5s ease-in-out forwards 2.5s; 
+        }
+
+        @keyframes fadeInShayari {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        #shayari-container p {
+            margin: 8px 0;
+            font-size: 16px; /* Mobile font */
+            color: #b33939;
+            font-weight: bold;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        /* -------------------------------------------
+           BACK BUTTON STYLES (Mobile optimized)
+        --------------------------------------------- */
+        .back-btn {
+            position: fixed; 
+            top: 20px;       /* Corner mein set kiya */
+            left: 20px;      
+            padding: 10px 20px;
+            background: #000000;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+            z-index: 100; 
+            transition: transform 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #ff6b81;
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <div id="instruction">Tap karo! 🎈</div>
+
+        <div id="balloon-container" onclick="popBalloon()">
+            <div class="css-balloon" id="balloon-element">
+                <div class="balloon-knot"></div>
+                <div class="balloon-string"></div>
+            </div>
+        </div>
+
+        <div id="frame-container">
+            <img id="girl-photo" class="photo" src="" alt="Beautiful Memory">
+            <div id="caption-text" class="caption"></div>
+        </div>
+    </div>
+
+    <div id="final-gallery-section">
+        <!-- BACK BUTTON ADDED HERE (Upar rakha gaya hai taaki scroll me problem na ho) -->
+        <a href="mobile3.html" class="back-btn">⬅ Back</a>
+
+        <div id="final-message">
+           
+        </div>
+        
+        <div id="gallery-grid">
+            </div>
+
+        <div id="shayari-container">
+            <p>"Faasle hain magar dil ke bahut paas ho tum,"</p>
+            <p>"Meri har ek subah, har ek shaam ka ehsaas ho tum,"</p>
+            <p>"Mana ki abhi tak dekha nahi in aankhon ne tumhe..."</p>
+            <p>"Par meri zindagi ki sabse pyari talaash ho tum!" ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        const memories = [
+            { src: "photo1.jpg", text: "Tujhse mile bina hi tera itna asar hai, soch jab milenge tab kya hoga... ❤️" },
+            { src: "photo2.jpg", text: "Screen ke us paar se bhi tu mere dil ke sabse kareeb hai... ✨" },
+            { src: "photo3.jpg", text: "Us din ka besabri se intezaar hai, jab tu pehli baar mere samne hogi... 🥺" },
+            { src: "photo4.jpg", text: "Teri aawaz sun kar hi mera pura din ban jata hai... 🎧" },
+            { src: "photo5.jpg", text: "Faasle sirf kilometers mein hain, dil se toh hum hamesha saath hain... 💑" },
+            { src: "photo6.jpg", text: "Milne ka khwab roz dekhta hoon, ab uske sach hone ka intezaar hai... 💭" },
+            { src: "photo7.jpg", text: "Bina mile hi kisi ne mere dil par itna raaj kiya hai, wo sirf tu hai... 👑" },
+            { src: "photo8.jpg", text: "Video call ki screen, jaldi hi real face-to-face mein badlegi... 🤞" },
+            { src: "photo9.jpg", text: "Jab pehli baar samne aayegi, main toh bas tujhe hi dekhta rahunga... 👀" },
+            { src: "photo10.jpg", text: "Ab aur doori nahi sahi jaati, jaldi aaja milne! 🫂❤️" }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        const mainContainer = document.getElementById("main-container");
+        const balloonContainer = document.getElementById("balloon-container");
+        const balloonElement = document.getElementById("balloon-element");
+        const frameContainer = document.getElementById("frame-container");
+        const girlPhoto = document.getElementById("girl-photo");
+        const captionText = document.getElementById("caption-text");
+        const instruction = document.getElementById("instruction");
+        
+        // Gallery Elements
+        const finalGallerySection = document.getElementById("final-gallery-section");
+        const galleryGrid = document.getElementById("gallery-grid");
+
+        function startBalloon() {
+            balloonContainer.style.display = "block";
+            balloonContainer.classList.remove("float-up");
+            void balloonContainer.offsetWidth; 
+            balloonContainer.classList.add("float-up");
+            
+            setTimeout(() => {
+                instruction.style.display = "block";
+            }, 600); 
+        }
+
+        startBalloon();
+
+        function popBalloon() {
+            if (isAnimating || currentIndex >= memories.length) return;
+            isAnimating = true;
+
+            balloonElement.classList.add("pop-animation");
+            instruction.style.display = "none";
+
+            setTimeout(() => {
+                balloonContainer.style.display = "none";
+                balloonElement.classList.remove("pop-animation");
+
+                girlPhoto.src = memories[currentIndex].src;
+                captionText.innerHTML = memories[currentIndex].text;
+
+                frameContainer.classList.remove("frame-hide");
+                frameContainer.classList.add("frame-show");
+
+                setTimeout(() => {
+                    frameContainer.classList.remove("frame-show");
+                    frameContainer.classList.add("frame-hide");
+
+                    setTimeout(() => {
+                        frameContainer.style.display = "none";
+                        currentIndex++;
+
+                        if (currentIndex < memories.length) {
+                            startBalloon(); 
+                            isAnimating = false;
+                        } else {
+                            showFinalGallery(); 
+                        }
+                    }, 300);
+
+                }, 1000); 
+
+            }, 150); 
+        }
+
+        function showFinalGallery() {
+            mainContainer.style.display = "none";
+            
+            finalGallerySection.style.display = "block";
+            
+            document.body.style.overflow = "auto";
+
+            let galleryHTML = '';
+            memories.forEach((mem, index) => {
+                let delay = index * 0.2; 
+                galleryHTML += `
+                    <div class="gallery-frame" style="animation-delay: ${delay}s;">
+                        <img src="${mem.src}" alt="Beautiful Memory">
+                        <div class="gallery-caption">${mem.text}</div>
+                    </div>
+                `;
+            });
+            
+            galleryGrid.innerHTML = galleryHTML;
+        }
+    </script>
+
+</body>
+</html>

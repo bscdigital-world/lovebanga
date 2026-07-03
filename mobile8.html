@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Dance Surprise 🪩</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            /* DJ Light Dynamic Background Effect */
+            background: radial-gradient(circle, #4a0518 0%, #000000 100%);
+            animation: djLightsMobile 5s ease infinite alternate;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* DJ Moving Lights for Mobile */
+        @keyframes djLightsMobile {
+            0% { background: radial-gradient(circle, #5c061e 0%, #000000 100%); }
+            50% { background: radial-gradient(circle, #3d0052 0%, #02000a 100%); }
+            100% { background: radial-gradient(circle, #06475c 0%, #000000 100%); }
+        }
+
+        /* Floating Party Emoticons */
+        .star { position: absolute; font-size: 22px; opacity: 0.35; animation: floatMobile 7s linear infinite; }
+        @keyframes floatMobile { 0% { transform: translateY(100vh) rotate(0deg); } 100% { transform: translateY(-10vh) rotate(360deg); } }
+
+        /* Full Screen Play Overlay */
+        #play-overlay {
+            position: absolute; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); display: flex;
+            justify-content: center; align-items: center; z-index: 100;
+        }
+
+        .dance-intro-btn {
+            padding: 20px 50px; font-size: 28px; font-family: 'Playfair Display', serif;
+            font-weight: bold; border-radius: 50px; background: linear-gradient(45deg, #ff4081, #9c27b0);
+            color: white; border: none; cursor: pointer;
+            box-shadow: 0 0 25px #ff4081, 0 0 45px #9c27b0;
+        }
+
+        /* ========================================================
+           MOBILE VIDEO BOX SETTINGS (Phone Screen Adjustment)
+           ======================================================== */
+        .video-container {
+            /* Mobile screen par bada dikhane ke liye width 88% rakhi hai */
+            width: 88vw; 
+            max-width: 420px;
+            
+            /* 9/16 vertical screen aspect ratio taaki reels jaisa lamba dikhe */
+            aspect-ratio: 9/16; 
+            
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 0 35px rgba(255, 64, 129, 0.7);
+            border: 4px solid #ffeb3b;
+            background: #000;
+            display: none; /* Shuru me hidden */
+        }
+        video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Buttons Optimized for Mobile Tapping */
+        .action-btn {
+            display: none; 
+            margin-top: 25px;
+            padding: 16px 40px; font-size: 22px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; border: none;
+            font-family: 'Playfair Display', serif;
+            z-index: 50;
+            animation: popIn 0.5s ease forwards;
+        }
+
+        #next-song-btn {
+            background: linear-gradient(45deg, #00e5ff, #00ffd8);
+            color: #000;
+            box-shadow: 0 0 25px #00e5ff;
+        }
+
+        #last-surprise-btn {
+            background: linear-gradient(45deg, #ffeb3b, #ff9100);
+            color: #000;
+            box-shadow: 0 0 30px #ffeb3b;
+        }
+
+        /* ========================================================
+           MOBILE GIF ADJUSTMENTS
+           ======================================================== */
+        #surprise-gif {
+            display: none; 
+            margin-bottom: 20px;
+            
+            /* Mobile par GIF ka size adjust karne ke liye ise chhota/bada karein */
+            width: 150px; 
+            height: auto;
+            
+            filter: drop-shadow(0 0 15px #ffeb3b);
+            animation: popIn 0.5s ease forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start Overlay Screen -->
+    <div id="play-overlay">
+        <button class="dance-intro-btn" id="start-dance-btn">Let's Dance 🪩</button>
+    </div>
+
+    <!-- Background DJ Effects -->
+    <div id="stars-layer"></div>
+
+    <!-- Fully Responsive Mobile Video Container -->
+    <div class="video-container" id="video-wrapper">
+        <video id="main-video" playsinline></video>
+    </div>
+
+    <!-- Mobile Screen GIF -->
+    <img id="surprise-gif" src="bunny-balloon.gif" alt="Surprise Celebration">
+
+    <!-- Mobile Action Buttons -->
+    <button class="action-btn" id="next-song-btn">Next Song 🎧</button>
+    <button class="action-btn" id="last-surprise-btn">Last Surprise For You 🎁</button>
+
+    <script>
+        // Playlist logic (vahi same video files)
+        const playlist = ["dance1.mp4", "dance2.mp4", "dance3.mp4"];
+        let currentTrackIndex = 0;
+
+        const videoWrapper = document.getElementById("video-wrapper");
+        const videoElement = document.getElementById("main-video");
+        const playOverlay = document.getElementById("play-overlay");
+        const startBtn = document.getElementById("start-dance-btn");
+        const nextSongBtn = document.getElementById("next-song-btn");
+        const lastSurpriseBtn = document.getElementById("last-surprise-btn");
+        const surpriseGif = document.getElementById("surprise-gif");
+
+        // Mobile Star Backdrop elements generator
+        const starsLayer = document.getElementById('stars-layer');
+        const emojis = ['✨', '🪩', '🎵', '❤️', '💃', '🕺'];
+        for(let i=0; i<12; i++) {
+            let s = document.createElement('div'); s.className = 'star';
+            s.innerHTML = emojis[Math.floor(Math.random() * emojis.length)]; 
+            s.style.left = Math.random()*100 + 'vw';
+            s.style.animationDelay = Math.random()*5 + 's';
+            starsLayer.appendChild(s);
+        }
+
+        // Action 1: "Let's Dance" trigger
+        startBtn.addEventListener("click", () => {
+            playOverlay.style.display = "none";
+            videoWrapper.style.display = "block";
+            videoElement.src = playlist[currentTrackIndex];
+            videoElement.play();
+        });
+
+        // Dynamic track sequence listener
+        videoElement.addEventListener("ended", () => {
+            if (currentTrackIndex < 2) {
+                nextSongBtn.style.display = "block";
+            } else {
+                videoWrapper.style.display = "none";
+                surpriseGif.style.display = "block";
+                lastSurpriseBtn.style.display = "block";
+            }
+        });
+
+        // Action 2: Load next video track
+        nextSongBtn.addEventListener("click", () => {
+            nextSongBtn.style.display = "none";
+            currentTrackIndex++;
+            videoElement.src = playlist[currentTrackIndex];
+            videoElement.play();
+        });
+
+        // Action 3: Final redirect logic
+        lastSurpriseBtn.addEventListener("click", () => {
+            window.location.href = "mobile9.html"; // Aap yahan apna next file page daal sakte hain
+        });
+    </script>
+</body>
+</html>

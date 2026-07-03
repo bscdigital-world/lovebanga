@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #371d26, #1a0009);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .card {
+            /* Yahan change kiya hai: 0.03 ki jagah 0.12 kar diya hai taaki box alag aur glassy dikhe */
+            background: rgb(82 190 228 / 12%);
+            padding: 80px;
+            border-radius: 70px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            border: 2px solid rgba(255, 105, 180, 0.5); /* Border thodi bright ki hai */
+            
+            /* Inner shadow add kiya hai taaki box background se alag ubhar ke aaye */
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.3), inset 0 0 20px rgba(255, 105, 180, 0.15); 
+            
+            color: white;
+            max-width: 700px;
+            max-height: 300px;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5.4rem;
+            color: #ff69b4;
+            text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff69b4;
+            margin-bottom: 50px;
+            margin-top: -30px;
+        }
+
+        /* Sirf is line ke liye changes */
+        .special-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            color: #ff9376; /* Pastel Orange color */
+            text-shadow: 0 0 8px #ff9376;
+            font-weight: 600;
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid #ff69b4;
+            padding: 20px 50px;
+            color: #ff69b4;
+            font-size: 25px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            text-shadow: 0 0 10px #ff69b4;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+            transition: 0.4s;
+            margin-top:20px;
+        }
+
+        button:hover {
+            background: #ff69b4;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Hey Beautiful... ✨</h1>
+        <p class="special-text">I have something special to show you.</p>
+        
+        <a href="crystal.html" style="text-decoration: none;">
+            <button>Start Journey 💖</button>
+        </a>
+        
+    </div>
+
+</body>
+</html>

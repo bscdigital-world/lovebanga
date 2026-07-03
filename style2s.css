@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* Thoda deep, soft romantic pink background */
+        background: linear-gradient(135deg, #6008ff 0%, #ffb199 100%);
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Floating Hearts Animation */
+.background-hearts {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.background-hearts span {
+    position: absolute;
+    font-size: 28px; /* Thode bade hearts */
+    opacity: 0.5;
+    animation: float 6s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.5)); /* Hearts pe slight glow */
+}
+
+.background-hearts span:nth-child(1) { left: 10%; animation-duration: 5s; }
+.background-hearts span:nth-child(2) { left: 30%; animation-duration: 7s; animation-delay: 2s; }
+.background-hearts span:nth-child(3) { left: 50%; animation-duration: 6s; animation-delay: 1s; }
+.background-hearts span:nth-child(4) { left: 70%; animation-duration: 8s; animation-delay: 3s; }
+.background-hearts span:nth-child(5) { left: 85%; animation-duration: 5.5s; animation-delay: 0.5s; }
+.background-hearts span:nth-child(6) { left: 20%; animation-duration: 6.5s; animation-delay: 4s; }
+
+@keyframes float {
+    0% { transform: translateY(100vh) scale(0.8) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.7; }
+    100% { transform: translateY(-10vh) scale(1.2) rotate(20deg); opacity: 0; }
+}
+
+/* Screen UI Container */
+.screen-container {
+    background-color: rgb(204 189 189 / 85%); 
+    backdrop-filter: blur(8px); 
+    padding: 65px 61px; /* Padding badha di hai */
+    border-radius: 58px;
+    box-shadow: 0 15px 35px rgba(216, 27, 96, 0.25); 
+    text-align: center;
+    z-index: 1;
+    /* Pehle 520px tha, ab 700px kar diya */
+    max-width: 793px;
+    max-height: 553px;
+    width: 90%;
+    border: 2px solid rgba(255, 182, 193, 0.5);
+}
+
+
+.title {
+    color: #c2185b; /* Dark romantic maroon/pink */
+    font-size: 68px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 2px rgba(194, 24, 91, 0.2);
+}
+
+.subtitle {
+    color: #d81b60; /* Medium dark pink */
+    font-size: 24px;
+    font-weight: 600;
+    font-style: italic;
+    margin-bottom: 45px;
+}
+
+/* Card Grid Layout */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    justify-items: center;
+}
+
+/* Individual Card Styling */
+.card {
+    background-color: #ffe4e1; /* Misty rose color */
+    width: 140px;
+    height: 110px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.7), 0 6px 15px rgba(216, 27, 96, 0.15);
+    border: 2px solid #ff80ab; /* Darker border */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative; /* For glow effect */
+}
+
+.card svg {
+    width: 55px;
+    height: 55px;
+    color: #e91e63; /* Main icon color */
+    transition: all 0.3s ease;
+}
+
+/* Hover Animations */
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    background-color: #ffcdd2;
+    box-shadow: 0 20px 30px rgba(216, 27, 96, 0.3);
+    border-color: #f50057;
+}
+
+.card:hover svg {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 5px rgba(233, 30, 99, 0.5));
+}
+
+/* Click/Active Glow Effect Classes (JS will add these) */
+.card.glow-1 {
+    box-shadow: 0 0 40px #ff4081, inset 0 0 20px #ff4081; /* Pink Glow */
+    border-color: #ff4081;
+    transform: scale(0.95);
+}
+.card.glow-2 {
+    box-shadow: 0 0 40px #7c4dff, inset 0 0 20px #7c4dff; /* Purple Glow */
+    border-color: #7c4dff;
+    transform: scale(0.95);
+}
+.card.glow-3 {
+    box-shadow: 0 0 40px #00e5ff, inset 0 0 20px #00e5ff; /* Cyan Glow */
+    border-color: #00e5ff;
+    transform: scale(0.95);
+}
+.card.glow-4 {
+    box-shadow: 0 0 40px #ffd740, inset 0 0 20px #ffd740; /* Gold/Yellow Glow */
+    border-color: #ffd740;
+    transform: scale(0.95);
+}

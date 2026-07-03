@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Dance Surprise 🪩</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            /* DJ Light Romantic Effect - Yeh background rang badalta rahega */
+            background: radial-gradient(circle, #4a0518 0%, #000000 100%);
+            animation: djLights 6s ease infinite alternate;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* DJ Moving Lights Animation */
+        @keyframes djLights {
+            0% { background: radial-gradient(circle, #4a0518 0%, #000000 100%); }
+            50% { background: radial-gradient(circle, #2b003a 0%, #02000a 100%); }
+            100% { background: radial-gradient(circle, #053a4a 0%, #000000 100%); }
+        }
+
+        /* Floating Party Elements */
+        .star { position: absolute; font-size: 24px; opacity: 0.4; animation: float 6s linear infinite; }
+        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); } 100% { transform: translateY(-10vh) rotate(360deg); } }
+
+        /* Starting Overlay */
+        #play-overlay {
+            position: absolute; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: flex;
+            justify-content: center; align-items: center; z-index: 100;
+        }
+
+        .dance-intro-btn {
+            padding: 25px 60px; font-size: 32px; font-family: 'Playfair Display', serif;
+            font-weight: bold; border-radius: 50px; background: linear-gradient(45deg, #ff4081, #9c27b0);
+            color: white; border: none; cursor: pointer;
+            box-shadow: 0 0 30px #ff4081, 0 0 50px #9c27b0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .dance-intro-btn:hover { transform: scale(1.08); box-shadow: 0 0 40px #ff4081, 0 0 70px #9c27b0; }
+
+        /* Laptop Adjusted Video Container */
+        .video-container {
+            width: 42%; /* Laptop ke liye perfect width adjustment */
+            max-width: 550px;
+            aspect-ratio: 9/16; /* Standard horizontal display */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 64, 129, 0.6);
+            border: 4px solid #ffeb3b;
+            background: #000;
+            display: none; /* Shuru me video hidden rahegi */
+        }
+        video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Universal Action Buttons */
+        .action-btn {
+            display: none; /* Hidden by default */
+            margin-top: 30px;
+            padding: 15px 45px; font-size: 24px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; border: none;
+            font-family: 'Playfair Display', serif;
+            z-index: 50;
+            animation: bounceIn 0.8s ease forwards;
+        }
+
+        /* Next Song Button Customization */
+        #next-song-btn {
+            background: linear-gradient(45deg, #00e5ff, #00ffd8);
+            color: #000;
+            box-shadow: 0 0 25px #00e5ff;
+        }
+
+        /* Last Surprise For You Button Customization */
+        #last-surprise-btn {
+            background: linear-gradient(45deg, #ffeb3b, #ff9100);
+            color: #000;
+            box-shadow: 0 0 30px #ffeb3b;
+        }
+
+        /* ========================================================
+           GIF SETTINGS (Yahan se GIF ko chhota-bada / upar-niche karein)
+           ======================================================== */
+        #surprise-gif {
+            display: none; 
+            margin-bottom: 15px; /* Button se gap control karne ke liye */
+            
+            /* GIF ka size adjust karne ke liye niche di gayi width badlein (Jaise 150px, 200px, 250px) */
+            width: 180px; 
+            height: auto;
+            
+            filter: drop-shadow(0 0 15px #ffeb3b);
+            animation: bounceIn 0.8s ease forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            70% { opacity: 1; transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Starting Overlay Screen -->
+    <div id="play-overlay">
+        <button class="dance-intro-btn" id="start-dance-btn">Let's Dance 🪩</button>
+    </div>
+
+    <!-- Background DJ Decorative Stars -->
+    <div id="stars-layer"></div>
+
+    <!-- Laptop Responsive Video Box -->
+    <div class="video-container" id="video-wrapper">
+        <video id="main-video"></video>
+    </div>
+
+    <!-- Adjustable GIF Option -->
+    <img id="surprise-gif" src="bunny-balloon.gif" alt="Surprise Celebration">
+
+    <!-- Control Buttons -->
+    <button class="action-btn" id="next-song-btn">Next Song 🎧</button>
+    <button class="action-btn" id="last-surprise-btn">Last Surprise For You 🎁</button>
+
+    <script>
+        // Video paths and order tracking
+        const playlist = ["dance1.mp4", "dance2.mp4", "dance3.mp4"];
+        let currentTrackIndex = 0;
+
+        const videoWrapper = document.getElementById("video-wrapper");
+        const videoElement = document.getElementById("main-video");
+        const playOverlay = document.getElementById("play-overlay");
+        const startBtn = document.getElementById("start-dance-btn");
+        const nextSongBtn = document.getElementById("next-song-btn");
+        const lastSurpriseBtn = document.getElementById("last-surprise-btn");
+        const surpriseGif = document.getElementById("surprise-gif");
+
+        // Star Background Effects Creator
+        const starsLayer = document.getElementById('stars-layer');
+        const emojis = ['✨', '🪩', '🎵', '❤️', '💃', '🕺'];
+        for(let i=0; i<15; i++) {
+            let s = document.createElement('div'); s.className = 'star';
+            s.innerHTML = emojis[Math.floor(Math.random() * emojis.length)]; 
+            s.style.left = Math.random()*100 + 'vw';
+            s.style.animationDelay = Math.random()*6 + 's';
+            starsLayer.appendChild(s);
+        }
+
+        // Action 1: "Let's Dance" click event
+        startBtn.addEventListener("click", () => {
+            playOverlay.style.display = "none";
+            videoWrapper.style.display = "block";
+            videoElement.src = playlist[currentTrackIndex];
+            videoElement.play();
+        });
+
+        // Track listener: triggers when a video ends
+        videoElement.addEventListener("ended", () => {
+            if (currentTrackIndex < 2) {
+                // If video 1 or video 2 ends, show Next Song button
+                nextSongBtn.style.display = "block";
+            } else {
+                // If video 3 (final) ends, hide video completely and show final screen components
+                videoWrapper.style.display = "none";
+                surpriseGif.style.display = "block";
+                lastSurpriseBtn.style.display = "block";
+            }
+        });
+
+        // Action 2: "Next Song" button logic
+        nextSongBtn.addEventListener("click", () => {
+            nextSongBtn.style.display = "none"; // Hide button again
+            currentTrackIndex++;
+            videoElement.src = playlist[currentTrackIndex];
+            videoElement.play();
+        });
+
+        // Action 3: Final redirect button logic
+        lastSurpriseBtn.addEventListener("click", () => {
+            // Yahan aap agle page ka name link kar dena
+            window.location.href = "final_gift.html";
+        });
+    </script>
+</body>
+</html>

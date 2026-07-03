@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile optimization: 'maximum-scale=1.0, user-scalable=no' screen ko hilaane ya zoom hone se rokega, perfect app-like feel ke liye -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="A special question for a special person. ❤️">
+
+    <!-- Open Graph / Social Sharing Tags -->
+    <meta property="og:title" content="A Surprise For You 💖">
+    <meta property="og:description" content="I have a question to ask you...">
+    <meta property="og:image"
+        content="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtZ2JiZDR0a3lvMDF4OG43bnk2b3NxanF4YnZ4N3k1eXJ3bnIxZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif">
+    <meta property="og:url" content="https://mysoulmate.love">
+    <meta property="og:type" content="website">
+
+    <title>My Heart Beats For You 💖</title>
+
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+
+    <!-- Core Libraries -->
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Base Reset */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #04060ff0;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            /* Mobile par tap karne par blue highlight rokne ke liye */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .font-main-title {
+            font-family: 'Dancing Script', cursive;
+            letter-spacing: 0.02em;
+        }
+
+        .font-elegant {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+
+        .glass-card {
+            background: rgba(20, 10, 10, 0.45);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(255, 20, 80, 0.05);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.5), 0 0 40px rgba(255, 20, 147, 0.3);
+        }
+
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(0);
+        }
+
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .app-container {
+            /* 100dvh mobile browsers (Safari/Chrome) ke navigation bar ke sath perfect set hota hai */
+            min-height: 100dvh; 
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Container ki outer padding baad mein badalni ho toh yahan se karein (default: 16px) */
+            padding: 16px; 
+            box-sizing: border-box;
+        }
+
+        .tape-strip {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1.5deg);
+            width: 90px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .floating-emoji {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 15s linear infinite;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.5));
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+
+        /* Initial Loading Spinner */
+        #img-preloader { display: none; }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ff0060;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Initial Loading Screen -->
+    <div id="loader" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="bg-canvas"></div>
+    <div id="root"></div>
+
+    <!-- Hidden Preloader for Images -->
+    <div id="img-preloader"></div>
+
+    <audio id="loveSong" loop preload="auto">
+        <source src="Perfect-(Mr-Jat.in).mp3" type="audio/mpeg">
+    </audio>
+
+    <script type="text/babel">
+        // --- ASSETS ---
+        const ASSETS = {
+            music: "Perfect-(Mr-Jat.in).mp3",
+            mainGif: "momo-the-cat-momo.gif",
+            successGif: "cat-kiss.webp",
+            rejectionGifs: ["sad-cat.webp", "pleas-please.webp", "200w.webp", "dracriona-ezio.webp", "cat-gun.webp"]
+        };
+        const MESSAGES = [
+            { t: "Will You Be My Forever?", s: "In a universe of billions, my heart chose you. You are my clarity in chaos. Will you walk this life with me?" },
+            { t: "Wait... Really? 🥺", s: "Is this real? My heart skipped a beat when you hesitated. Please don't close the book on us." },
+            { t: "Don't Break My Heart 💔", s: "I promise laughter, strength, and a love that never fades. Please, give us a chance to shine." },
+            { t: "I'm Pleading With You 🙏", s: "I will cross oceans just to see you smile. You are the only one I want, today and always." },
+            { t: "Please... Don't Do This 😭", s: "This silence is deafening. We are two halves of the same whole. Tell me you feel it too!" },
+            { t: "LAST CHANCE! 🌹", s: "Destiny brought us here. I am fighting for us because we are rare and magical. Say YES! 💖" }
+        ];
+
+        const { useState, useEffect, useRef } = React;
+
+        const HighResBackground = () => {
+            useEffect(() => {
+                const cvs = document.getElementById('bg-canvas');
+                if (!cvs) return;
+
+                const scene = new THREE.Scene();
+                scene.fog = new THREE.FogExp2(0x0a0005, 0.001);
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for mobile performance
+                cvs.appendChild(renderer.domElement);
+
+                // Reduce particles on mobile for smooth performance
+                const isMobile = window.innerWidth < 768;
+                const count = isMobile ? 3000 : 7000; 
+                
+                const geometry = new THREE.BufferGeometry();
+                const pos = new Float32Array(count * 3);
+                const tPos = new Float32Array(count * 3);
+                const col = new Float32Array(count * 3);
+                const c1 = new THREE.Color(0xff0040), c2 = new THREE.Color(0xffb7c5);
+
+                for (let i = 0; i < count; i++) {
+                    pos[i * 3] = (Math.random() - 0.5) * 150; pos[i * 3 + 1] = (Math.random() - 0.5) * 150; pos[i * 3 + 2] = (Math.random() - 0.5) * 150;
+                    const t = Math.random() * Math.PI * 2;
+                    let hx = 16 * Math.pow(Math.sin(t), 3), hy = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t), hz = (Math.random() - 0.5) * 6;
+                    const r = 1 + Math.pow(Math.random(), 3) * 0.8, scale = 0.65;
+                    tPos[i * 3] = hx * r * scale; tPos[i * 3 + 1] = hy * r * scale; tPos[i * 3 + 2] = hz * r * scale;
+                    const mix = c1.clone().lerp(c2, Math.random());
+                    col[i * 3] = mix.r; col[i * 3 + 1] = mix.g; col[i * 3 + 2] = mix.b;
+                }
+                geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(col, 3));
+                const mat = new THREE.PointsMaterial({ size: 0.2, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.85 });
+                const parts = new THREE.Points(geometry, mat);
+                scene.add(parts);
+
+                camera.position.z = 35;
+                const anim = { t: 0 }; gsap.to(anim, { t: 1, duration: 4.5, ease: "slow(0.7, 0.7, false)" });
+                const sPos = new Float32Array(pos);
+                let time = 0;
+
+                const animate = () => {
+                    requestAnimationFrame(animate); time += 0.005;
+                    if (anim.t < 1) {
+                        const K = anim.t, pa = geometry.attributes.position.array;
+                        for (let i = 0; i < count * 3; i++) pa[i] = sPos[i] + (tPos[i] - sPos[i]) * K;
+                        geometry.attributes.position.needsUpdate = true;
+                    } else {
+                        const p = 1 + Math.sin(time * 5) * 0.03;
+                        parts.scale.set(p, p, p); parts.rotation.y = Math.sin(time) * 0.1;
+                    }
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                const onResize = () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); };
+                window.addEventListener('resize', onResize);
+
+                return () => {
+                    window.removeEventListener('resize', onResize);
+                    if (cvs.contains(renderer.domElement)) cvs.removeChild(renderer.domElement);
+                    geometry.dispose(); mat.dispose(); renderer.dispose();
+                }
+            }, []);
+            return null;
+        };
+
+        const FloatingDecor = () => {
+            const items = ['💕', '💖', '💗', '💓', '💝', '💋', '✨', '🌹'];
+            const [els, setEls] = useState([]);
+            useEffect(() => {
+                setEls(Array.from({ length: 15 }).map((_, i) => ({ // Thode kam emojis mobile ke liye
+                    id: i, char: items[Math.floor(Math.random() * items.length)],
+                    left: Math.random() * 100, delay: Math.random() * 15, duration: 10 + Math.random() * 10, size: 20 + Math.random() * 20
+                })));
+            }, []);
+            return (
+                <>
+                    {els.map(el => (<div key={el.id} className="floating-emoji" style={{ left: `${el.left}vw`, animationDelay: `-${el.delay}s`, animationDuration: `${el.duration}s`, fontSize: `${el.size}px` }}> {el.char} </div>))}
+                </>
+            );
+        };
+
+        const Typer = ({ text }) => {
+            const [d, sD] = useState("");
+            useEffect(() => { sD(""); let i = 0; const t = setInterval(() => { if (i < text.length) { sD(p => p + text.charAt(i)); i++; } else clearInterval(t); }, 30); return () => clearInterval(t); }, [text]);
+            return <span>{d}</span>;
+        };
+
+        const App = () => {
+            const [started, setStarted] = useState(false);
+            const [status, setStatus] = useState('INIT');
+            const [idx, setIdx] = useState(0);
+            const audioRef = useRef(null);
+
+            useEffect(() => {
+                const loader = document.getElementById('loader');
+                if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.remove(), 500); }
+
+                const preloader = document.getElementById('img-preloader');
+                if (preloader) {
+                    [ASSETS.mainGif, ASSETS.successGif, ...ASSETS.rejectionGifs].forEach(src => {
+                        const img = new Image(); img.src = src; preloader.appendChild(img);
+                    });
+                }
+
+                audioRef.current = document.getElementById('loveSong');
+                if (localStorage.getItem('my_love_ultimate') === 'true') { setStarted(true); setStatus('SUCCESS'); setTimeout(() => audioRef.current?.play().catch(() => { }), 1000); }
+            }, []);
+
+            const start = () => { setStarted(true); setStatus('ASKING'); audioRef.current?.play().catch(console.error); };
+            const yes = () => {
+                localStorage.setItem('my_love_ultimate', 'true'); setStatus('SUCCESS');
+                for (let i = 0; i < 60; i++) {
+                    const d = document.createElement('div');
+                    d.style.cssText = `position:fixed;left:50%;top:50%;width:8px;height:8px;background:${Math.random() > 0.5 ? '#f06' : '#fff'};border-radius:50%;z-index:99;pointer-events:none;`;
+                    document.body.appendChild(d);
+                    const angle = Math.random() * Math.PI * 2, dist = 100 + Math.random() * 300;
+                    gsap.to(d, { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, opacity: 0, duration: 1.5, ease: "power2.out", onComplete: () => d.remove() });
+                }
+            };
+            const no = () => setIdx(Math.min(idx + 1, MESSAGES.length - 1));
+            
+            const reset = () => { 
+                localStorage.removeItem('my_love_ultimate'); 
+                window.location.href = "mobile6.html"; 
+            };
+            
+            const handleNoHover = (e) => { 
+                if (idx >= 5) { 
+                    const b = e.target; 
+                    // Mobile ke hisab se escape area thoda chota kiya hai
+                    gsap.to(b, { x: (Math.random() - 0.5) * 150, y: (Math.random() - 0.5) * 150, duration: 0.3 }); 
+                } 
+            };
+
+            const msg = MESSAGES[Math.min(idx, MESSAGES.length - 1)];
+            const img = idx === 0 ? ASSETS.mainGif : ASSETS.rejectionGifs[Math.min(idx - 1, ASSETS.rejectionGifs.length - 1)];
+
+            // START SCREEN
+            if (!started && status !== 'SUCCESS') return (
+                <div onClick={start} className="app-container cursor-pointer z-10">
+                    <HighResBackground /> <FloatingDecor />
+                    <div className="text-center animate-pulse px-4 relative z-20">
+                        {/* Start screen text size adjust karne ke liye (text-5xl, sm:text-6xl, md:text-9xl) */}
+                        <h1 className="font-main-title text-5xl sm:text-6xl md:text-9xl text-pink-500 text-glow leading-tight">Love Awaits</h1>
+                        <p className="font-elegant text-white/60 tracking-[0.3em] sm:tracking-[0.4em] text-xs sm:text-sm mt-6 uppercase">Tap to Begin Our Story</p>
+                    </div>
+                </div>
+            );
+
+            // SUCCESS SCREEN (YES CLICK HONE KE BAAD)
+            if (status === 'SUCCESS') return (
+                <div className="app-container z-10">
+                    <HighResBackground /> <FloatingDecor />
+                    {/* Success card padding adjust karne ke liye (p-6, sm:p-8, md:p-14) */}
+                    <div className="glass-card p-6 sm:p-8 md:p-14 rounded-[2rem] text-center max-w-4xl w-full border-white/20 relative z-20 mx-2 sm:mx-0">
+                        {/* Title text size (text-4xl, sm:text-5xl, md:text-8xl) */}
+                        <h1 className="font-main-title text-4xl sm:text-5xl md:text-8xl text-pink-400 mb-6 sm:mb-8 text-glow leading-tight">Forever & Always</h1>
+                        
+                        {/* Image Box (max-w-[220px] mobile ke liye) */}
+                        <div className="relative w-full max-w-[220px] sm:max-w-xs mx-auto mb-8 sm:mb-10 bg-white/5 p-2 rotate-2 hover:rotate-0 transition-transform duration-500 shadow-xl border border-white/10">
+                            <div className="tape-strip"></div>
+                            <img src={ASSETS.successGif} className="w-full h-auto object-cover aspect-square" />
+                        </div>
+
+                        {/* Success Message Text (text-lg, md:text-2xl) */}
+                        <p className="font-elegant text-lg sm:text-xl md:text-2xl text-pink-100 mb-8 px-2">"You are my today and all of my tomorrows."</p>
+                        
+                        <button onClick={reset} className="px-6 sm:px-8 py-3 rounded-full border border-pink-500/30 text-pink-300 hover:text-white hover:bg-pink-500/20 uppercase tracking-widest text-xs transition-all w-full sm:w-auto">Next ➡️💝</button>
+                    </div>
+                </div>
+            );
+
+            // MAIN QUESTION SCREEN
+            return (
+                <div className="app-container overflow-y-auto overflow-x-hidden z-10">
+                    <HighResBackground /> <FloatingDecor />
+                    
+                    {/* Main Box: Padding (p-5, sm:p-8), Border Radius (rounded-[2rem]), Width (w-[95%], sm:w-full) */}
+                    <div className="glass-card w-[95%] sm:w-full max-w-3xl p-5 sm:p-8 md:p-14 rounded-[2rem] flex flex-col items-center border-white/10 shadow-2xl my-auto relative z-20">
+                        
+                        <div className="w-full flex items-center justify-center mb-2 sm:mb-4">
+                            {/* Main Title 'Will you be my forever': size adjustments (text-3xl, sm:text-4xl, md:text-7xl) */}
+                            <h1 className="font-main-title text-[2.2rem] sm:text-4xl md:text-7xl text-pink-400 text-center text-glow leading-tight py-2 px-1">{msg.t}</h1>
+                        </div>
+
+                        <div className="w-full mb-6 sm:mb-8 flex items-center justify-center px-1 min-h-[4rem] sm:min-h-[5rem]">
+                            {/* Paragraph description size (text-base, sm:text-lg) */}
+                            <p className="font-elegant text-base sm:text-lg md:text-xl text-center text-pink-50/90 leading-relaxed max-w-lg"><Typer key={msg.s} text={msg.s} /></p>
+                        </div>
+
+                        {/* Center GIF Box: Iski width/height mobile aur desktop dono ke liye alag set hai (w-52 h-52 for mobile) */}
+                        <div className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 mb-8 sm:mb-10 bg-black/40 p-2 shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-500 group border border-white/10">
+                            <div className="tape-strip"></div>
+                            <img src={img} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700" />
+                        </div>
+
+                        {/* Buttons Container: Mobile par column (upar-neeche), Badi screen par row (saath-saath) */}
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full justify-center items-center px-2">
+                            {/* Yes Button */}
+                            <button onClick={yes} className="w-full sm:w-auto px-8 sm:px-10 py-3 rounded-full bg-pink-600 hover:bg-pink-700 text-white font-medium tracking-wide shadow-lg transition-all btn-shine text-sm sm:text-base">Yes 💖</button>
+                            
+                            {/* No Button */}
+                            <button onClick={no} onMouseEnter={handleNoHover} onTouchStart={handleNoHover} className="w-full sm:w-auto px-8 sm:px-10 py-3 rounded-full border border-white/20 text-white/80 hover:bg-white/10 transition-all text-sm sm:text-base">No</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
