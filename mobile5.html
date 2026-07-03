@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- Mobile ke liye perfect zooming aur width scaling -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>An Infinite Garden for Her 🌸</title>
 <style>
@@ -26,32 +25,33 @@
     -webkit-tap-highlight-color: transparent; 
   }
   
-  /* --- MOBILE OPTIMIZED BACK BUTTON --- */
+  /* --- MOBILE & LAPTOP OPTIMIZED BACK BUTTON --- */
   .back-btn {
     position: absolute;
-    top: 775px;
-    left: 37px;
-    padding: 7px 14px; /* Mobile par tap karne ke liye thoda bada kiya */
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 22px;
+    top: 114px; /* Thoda upar kiya taaki clear dikhe */
+    left: 20px; /* Thoda space badhaya corner se */
+    padding: 3px 9px; 
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 30px;
     text-decoration: none;
     font-size: 1.1rem;
+    font-weight: bold;
     z-index: 100;
     transition: all 0.3s ease;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    display: none; /* Shuruat mein hidden rakhne ke liye */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: none; /* JavaScript isko shuruat mein hidden rakhega */
   }
-  .back-btn:active {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(0.95);
+  .back-btn:hover, .back-btn:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
   }
 
   #ui {
     position: absolute;
-    top: 35px; /* Mobile ke liye thoda niche shift kiya */
+    top: 35px; 
     width: 100%;
     text-align: center;
     color: rgba(255, 255, 255, 0.5);
@@ -71,7 +71,6 @@
 </head>
 <body>
 
-<!-- BACK BUTTON -->
 <a href="mobile3.html" class="back-btn">⬅ Back</a>
 
 <div id="ui">A beautiful bouquet, just for you... 💐</div>
@@ -93,7 +92,7 @@ function resize() {
   
   /* MOBILE OPTIMIZED SCALING */
   if (W < 600) {
-    SC = W / 380; // Mobile par phoolon ka size perfect rakhne ke liye
+    SC = W / 380; 
   } else {
     SC = Math.min(W, H) / 900; 
   }
@@ -122,7 +121,7 @@ function bezAngle(x0,y0, cx1,cy1, cx2,cy2, x1,y1, t) {
 }
 
 /* ── ENVIRONMENT ──────────────────────── */
-const STARS = Array.from({length: W < 600 ? 120 : 220}, () => ({ // Mobile par stars thode kam kiye performance ke liye
+const STARS = Array.from({length: W < 600 ? 120 : 220}, () => ({ 
   x: Math.random(), y: Math.random() * 0.80, r: Math.random() * 1.1 + 0.15,
   phase: Math.random() * Math.PI * 2, speed: 0.022 + Math.random() * 0.038,
   gold: Math.random() < 0.18
@@ -268,6 +267,7 @@ function drawRoseFlower(x, y, size, prog, wob, stemAngle) {
   ctx.lineTo(s*0.4, -s*0.25); ctx.lineTo(s*0.1, -s*0.02); ctx.lineTo(s*0.3, -s*0.1); ctx.fill();
   ctx.restore();
 }
+
 // SUNFLOWER
 function drawSunflowerLeaf(x, y, rot, size, prog) {
   if (prog <= 0) return; const s = size * prog;
@@ -353,19 +353,19 @@ function drawTulipFlower(x, y, size, prog, wob, stemAngle) {
 }
 
 // GENERIC AESTHETIC
-function drawGenericFlower(x, y, size, prog, wob) {
-  const s = size * prog;
+function drawGenericFlower(fx, fy, size, fp, wob) {
+  const s = size * fp;
   const rot = wob;
-  ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+  ctx.save(); ctx.translate(fx, fy); ctx.rotate(rot);
   for (let i = 0; i < 5; i++) {
     ctx.save(); ctx.rotate((i/5)*Math.PI*2 - Math.PI/2);
     ctx.beginPath(); ctx.ellipse(0, -s*0.58, s*0.295, s*0.46, 0, 0, Math.PI*2);
-    ctx.fillStyle='#e04838'; ctx.shadowColor='#ff6650'; ctx.shadowBlur=22*prog; ctx.fill(); ctx.restore();
+    ctx.fillStyle='#e04838'; ctx.shadowColor='#ff6650'; ctx.shadowBlur=22*fp; ctx.fill(); ctx.restore();
   }
   const cg = ctx.createRadialGradient(0,0,0, 0,0,s*0.31);
   cg.addColorStop(0, '#fff8d0'); cg.addColorStop(0.42, '#ffcc44'); cg.addColorStop(1, '#ff9922');
-  ctx.beginPath(); ctx.arc(0, 0, s*0.29, 0, Math.PI*2); ctx.fillStyle=cg; ctx.shadowColor='#ffcc44'; ctx.shadowBlur=24*prog; ctx.fill();
-  ctx.beginPath(); ctx.arc(0, 0, s*0.10, 0, Math.PI*2); ctx.fillStyle='rgba(255,252,200,0.92)'; ctx.shadowBlur=12*prog; ctx.fill(); ctx.restore();
+  ctx.beginPath(); ctx.arc(0, 0, s*0.29, 0, Math.PI*2); ctx.fillStyle=cg; ctx.shadowColor='#ffcc44'; ctx.shadowBlur=24*fp; ctx.fill();
+  ctx.beginPath(); ctx.arc(0, 0, s*0.10, 0, Math.PI*2); ctx.fillStyle='rgba(255,252,200,0.92)'; ctx.shadowBlur=12*fp; ctx.fill(); ctx.restore();
 }
 
 /* ── GAME/INTERACTION LOGIC ───────────── */
@@ -378,7 +378,6 @@ const FLOWER_DEFS = {
   generic:   { sd: '#1b6522', sl: '#2caa38', leaves: [] }
 };
 
-// Function to programmatically add a flower
 function addFlower(tx, ty, delay = 0) {
   const types = Object.keys(FLOWER_DEFS);
   const type  = types[Math.floor(Math.random() * types.length)];
@@ -406,13 +405,11 @@ function addFlower(tx, ty, delay = 0) {
   });
 }
 
-// Automatically build a gorgeous bouquet (Mobile Optimized Spread)
 function buildAutomaticBouquet() {
   let delay = 500;
   
-  // Mobile par position set karne ke liye
   let centerY = W < 600 ? H * 0.45 : H * 0.35; 
-  let spreadFactor = W < 600 ? 0.75 : 1; // Mobile par bahar na jaye phool
+  let spreadFactor = W < 600 ? 0.75 : 1; 
 
   // Center flower
   addFlower(CX, centerY, delay);
@@ -441,32 +438,30 @@ function buildAutomaticBouquet() {
     addFlower(CX + Math.cos(a)*r, centerY + Math.sin(a)*r*0.7, delay);
   }
 
-  // --- BOUQUET PURA HONE KE BAAD BACK BUTTON DIKHANE KA TIMER ---
+  // --- FIXED TIMER FOR BACK BUTTON ---
+  // Isko maine 'delay + 3000' se hata kar bilkul short 2000ms (2 seconds) kar diya hai.
+  // Taaki Vercel par bina wait kiye button turant dikh jaye.
   setTimeout(() => {
     const backBtn = document.querySelector('.back-btn');
     if (backBtn) {
-      backBtn.style.display = 'inline-block'; // Pura bouquet khilne par button visible hoga
+      backBtn.style.display = 'inline-block'; 
     }
-  }, delay + 3000); 
+  }, 2000); 
 }
 
 setTimeout(buildAutomaticBouquet, 100);
-
-// --- TOUCH AND CLICK EVENTS (MOBILE OPTIMIZED) ---
 
 function handleInteraction(tx, ty) {
   if (ty > BASE - 100) ty = BASE - 100;
   addFlower(tx, ty, 0);
 }
 
-// Desktop ke liye click
 canvas.addEventListener('click', (e) => {
   handleInteraction(e.clientX, e.clientY);
 });
 
-// Mobile Phones ke liye fast touch event
 canvas.addEventListener('touchstart', (e) => {
-  e.preventDefault(); // Zoom/Scroll rokne ke liye
+  e.preventDefault(); 
   const touch = e.touches[0];
   handleInteraction(touch.clientX, touch.clientY);
 }, {passive: false});
